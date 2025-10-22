@@ -19,7 +19,7 @@ variable "cluster_name" {
 variable "kubernetes_version" {
   description = "Kubernetes Version"
   type        = string
-  default     = "1.31.11"  # Trùng với kubectl version 
+  default     = "1.31.11"
 }
 
 variable "node_count" {
