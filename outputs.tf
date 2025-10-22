@@ -16,7 +16,7 @@ output "cluster_id" {
 output "kube_config" {
   description = "Kubernetes config"
   value       = azurerm_kubernetes_cluster.aks.kube_config_raw
-  sensitive   = true  # Ẩn thông tin nhạy cảm
+  sensitive   = true
 }
 
 output "get_credentials_command" {
