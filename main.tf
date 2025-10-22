@@ -15,7 +15,7 @@ resource "azurerm_container_registry" "acr" {
   resource_group_name = azurerm_resource_group.aks_rg.name
   location            = azurerm_resource_group.aks_rg.location
   sku                 = var.acr_sku
-  admin_enabled       = false  # Dùng Managed Identity thay vì admin user
+  admin_enabled       = false  
 
   tags = {
     Environment = "Demo"
@@ -44,20 +44,17 @@ resource "azurerm_kubernetes_cluster" "aks" {
     name       = "default"
     node_count = var.node_count
     vm_size    = var.vm_size
-    
-    # Enable auto-scaling (tùy chọn)
-    # min_count  = 1
-    # max_count  = 3
+
   }
 
-  # Sử dụng System-assigned Managed Identity (đơn giản hơn Service Principal)
+  # Sử dụng System-assigned Managed Identity
   identity {
     type = "SystemAssigned"
   }
 
   # Network Profile
   network_profile {
-    network_plugin    = "kubenet"  # Đơn giản hơn Azure CNI
+    network_plugin    = "kubenet" 
     load_balancer_sku = "standard"
   }
 
