@@ -1,4 +1,4 @@
-# Hướng dẫn triển khai ứng dụng Demo lên AKS bằng Terraform
+# Hướng dẫn triển khai AKS bằng Terraform
 
 ---
 
