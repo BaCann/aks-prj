@@ -30,10 +30,6 @@ terraform.rc
 # Lock file (tùy chọn: một số team muốn commit file này)
 # .terraform.lock.hcl
 
-# ==========================================
-# Thư mục deployment của bạn
-# ==========================================
-5g-monitor-deployment/
 
 # ==========================================
 # Azure & Kubernetes

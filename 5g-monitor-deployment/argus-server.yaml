@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: argus-server
+  namespace: free5gc
+  labels:
+    app: argus
+spec:
+  selector:
+    matchLabels:
+      app: argus
+  template:
+    metadata:
+      labels:
+        app: argus
+    spec:
+      hostNetwork: true
+      containers:
+        - name: argus
+          image:  bacanacr0132.azurecr.io/argus-server:5.0.2
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 561
+              hostPort: 561
+              protocol: TCP
+          command: ["/usr/local/sbin/argus"]
+          args: ["-i", "any", "-P", "561"]
+          resources:
+            requests:
+              cpu: 200m
+              memory: 128Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+          volumeMounts:
+            - name: host-dev
+              mountPath: /dev
+      volumes:
+        - name: host-dev
+          hostPath:
+            path: /dev
+            type: Directory
+      imagePullSecrets:
+        - name: acr-secret
+ 
+ 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: argus-server
+  namespace: free5gc
+spec:
+  selector:
+    app: argus
+  ports:
+    - protocol: TCP
+      port: 561
+      targetPort: 561
+  type: ClusterIP
+
+
+

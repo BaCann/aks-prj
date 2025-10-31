@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-5g-monitoring
+  labels:
+    app: dashboard-5g-monitoring
+  namespace: free5gc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard-5g-monitoring
+  template:
+    metadata:
+      labels:
+        app: dashboard-5g-monitoring
+    spec:
+      containers:
+        - name: dashboard-5g-monitoring
+          image: bacanacr0132.azurecr.io/dashboard:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8110
+          volumeMounts:
+            - name: dashboard-5g-monitoring-data
+              mountPath: /stored
+            - name: dashboard-ssl
+              mountPath: /etc/ssl/private
+              readOnly: true
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+      volumes:
+        - name: dashboard-5g-monitoring-data
+          persistentVolumeClaim:
+            claimName: dashboard-5g-monitoring-pvc
+        - name: dashboard-ssl
+          secret:
+            secretName: dashboard-ssl-secret
+            defaultMode: 0644
+      imagePullSecrets:
+        - name: acr-secret
+ 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-5g-monitoring-service
+  labels:
+    app: dashboard-5g-monitoring
+  namespace: free5gc
+spec:
+  type: NodePort
+  selector:
+    app: dashboard-5g-monitoring
+  ports:
+    - port: 8110
+      targetPort: 8110
+      nodePort: 30110
