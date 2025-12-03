@@ -1,14 +1,13 @@
-#!/bin/bash
 set -e
 
-# Colors for output
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-# Configuration
+
 DAEMONSET_FILE="file-check-daemonset.yaml"
 DAEMONSET_NAME="file-check"
 NAMESPACE="default"
@@ -17,7 +16,7 @@ AZURE_JSON_PATH="/host/etc/kubernetes/azure.json"
 TARGET_PERMISSION="600"
 TARGET_OWNER="root:root"
 
-# Functions
+
 print_header() {
     echo -e "\n${BLUE}========================================${NC}"
     echo -e "${BLUE}$1${NC}"
@@ -40,18 +39,6 @@ print_info() {
     echo -e "${BLUE}[INFO] $1${NC}"
 }
 
-# Check if kubectl is available
-# check_prerequisites() {
-#     if ! command -v kubectl &> /dev/null; then
-#         print_error "kubectl not found. Please install kubectl first."
-#         exit 1
-#     fi
-
-#     if [ ! -f "$DAEMONSET_FILE" ]; then
-#         print_error "DaemonSet file '$DAEMONSET_FILE' not found in current directory."
-#         exit 1
-#     fi
-# }
 
 # Deploy DaemonSet
 deploy_daemonset() {
@@ -64,7 +51,6 @@ deploy_daemonset() {
         print_info "Waiting for old pods to be terminated (30 seconds)..."
         sleep 30
 
-        # Verify all old pods are gone
         local remaining_pods=$(kubectl get pods -n $NAMESPACE -l app=file-check --no-headers 2>/dev/null | wc -l)
         if [ $remaining_pods -gt 0 ]; then
             print_warning "Still found $remaining_pods old pod(s), waiting additional 15 seconds..."
@@ -200,9 +186,6 @@ main() {
     echo "Target permissions: $TARGET_PERMISSION"
     echo "Target ownership: $TARGET_OWNER"
 
-    # Prerequisites
-    # check_prerequisites
-
     # Deploy DaemonSet
     deploy_daemonset
 
@@ -215,7 +198,7 @@ main() {
         exit 1
     fi
 
-    print_info "Found ${#pods[@]} node(s) to check" # in ra số lượng node
+    print_info "Found ${#pods[@]} node(s) to check" 
 
     # Check each file on each pod
     for pod in "${pods[@]}"; do
